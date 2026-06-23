@@ -26,10 +26,11 @@ def parse_snapshot(snapshot: Optional[str]):
 
 @router.get("/products")
 def list_products(
-    limit: int = Query(20, ge=1, le=100),
-    cursor: Optional[str] = None,
-    category: Optional[str] = None,
-    snapshot: Optional[str] = None,
+    limit: int = Query(20),
+    cursor: str = None,
+    category: str = None,
+    search: str = None,
+    snapshot: str = None,
     db: Session = Depends(get_db)
 ):
 
@@ -49,11 +50,12 @@ def list_products(
 
     # 3. DB query
     rows = get_products(
-        db=db,
-        limit=limit,
-        category=category,
-        cursor=decoded_cursor,
-        snapshot=snapshot_time
+        db,
+        limit,
+        category,
+        decoded_cursor,
+        snapshot_time,
+        search
     )
 
     # 4. format response
