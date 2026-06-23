@@ -1,5 +1,4 @@
 from sqlalchemy import text
-from .models import Product
 
 
 def get_products(db, limit, category=None, cursor=None, snapshot=None):
