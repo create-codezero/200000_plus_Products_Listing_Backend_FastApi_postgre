@@ -1,7 +1,7 @@
 from sqlalchemy import text
 
 
-def get_products(db, limit, category=None, cursor=None, snapshot=None):
+def get_products(db, limit, category=None, cursor=None, snapshot=None, search=None):
 
     query = """
     SELECT * FROM products
@@ -17,6 +17,16 @@ def get_products(db, limit, category=None, cursor=None, snapshot=None):
     if category:
         query += " AND category = :category"
         params["category"] = category
+
+    if search:
+        query += """
+        AND (
+            LOWER(name) LIKE LOWER(:search)
+            OR LOWER(brand) LIKE LOWER(:search)
+            OR LOWER(category) LIKE LOWER(:search)
+        )
+        """
+        params["search"] = f"%{search}%"
 
     if cursor:
         query += """
